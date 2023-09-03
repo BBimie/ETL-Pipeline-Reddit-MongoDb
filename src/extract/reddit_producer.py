@@ -19,9 +19,9 @@ class RedditProducer:
         pass
 
     def producer(self):
-        return KafkaProducer(bootstrap_servers='localhost:1234',
-                            value_serializer=lambda x:
-                            json.dumps(x).encode('utf-8')
+        return KafkaProducer(bootstrap_servers=['localhost:9092'],
+                            value_serializer=lambda x:json.dumps(x).encode('utf-8'),
+                            api_version=(0,11,5)
                         )
 
     def _reddit(self):
@@ -61,12 +61,13 @@ class RedditProducer:
                        'selftext' : sub.selftext,
                        'spoiler' : sub.spoiler,
                        'upvote_ratio' : sub.upvote_ratio}
-                self.producer.send("redditcomments", value=sub)
+                print(sub)
+                d = self.producer().send("redditcomments", value=sub)
+                meta = d.get()
+                print(meta.topic)
 
                 
-
-if __name__ == "__main__":
-    reddit_producer = RedditProducer().stream_submissions(subreddit_name='python', created_date='2023-08-01')
+RedditProducer().stream_submissions(subreddit_name='python', created_date='2023-08-01')
 
 
 
