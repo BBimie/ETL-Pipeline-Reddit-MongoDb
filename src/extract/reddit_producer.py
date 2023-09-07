@@ -7,10 +7,10 @@ from datetime import datetime
 
 load_dotenv()
 
-REDDIT_CLIENT_ID = os.environ["CLIENT_ID"]
-REDDIT_CLIENT_SECRET = os.environ["CLIENT_SECRET"]
-REDDIT_USERNAME = os.environ["USERNAME"]
-REDDIT_PASSWORD = os.environ["PASSWORD"]
+REDDIT_CLIENT_ID = os.environ["REDDIT_CLIENT_ID"]
+REDDIT_CLIENT_SECRET = os.environ["REDDIT_CLIENT_SECRET"]
+REDDIT_USERNAME = os.environ["REDDIT_USERNAME"]
+REDDIT_PASSWORD = os.environ["REDDIT_PASSWORD"]
 
 
 
@@ -19,10 +19,13 @@ class RedditProducer:
         pass
 
     def producer(self):
-        return KafkaProducer(bootstrap_servers=['localhost:9092'],
-                            value_serializer=lambda x:json.dumps(x).encode('utf-8'),
-                            api_version=(0,11,5)
-                        )
+        try:
+            producer = KafkaProducer(bootstrap_servers=['localhost:9092'], api_version=(0, 11))
+            return producer
+        except Exception as ex:
+            print('Exception while connecting Kafka')
+            print(str(ex))
+            
 
     def _reddit(self):
         reddit = praw.Reddit(
@@ -40,6 +43,7 @@ class RedditProducer:
             created_date: A string representing the date in 'YYYY-MM-DD' format 
         
         """
+        producer = self.producer()
 
         subreddit = self._reddit().subreddit(subreddit_name).new(limit=None)
 
@@ -50,7 +54,7 @@ class RedditProducer:
                        'subreddit': sub.subreddit,
                        'author' : sub.author,
                        'created_date': datetime.utcfromtimestamp(sub.created_utc).strftime('%Y-%m-%d'),
-                       'comments' : sub.comments,
+                       'comments' : [ {'text': comment.body, 'author':comment.author } for comment in sub.comments][:10],
                        'edited' : sub.edited,
                        'distinguished' : sub.distinguished,
                        'submission_id' : sub.id,
@@ -61,13 +65,16 @@ class RedditProducer:
                        'selftext' : sub.selftext,
                        'spoiler' : sub.spoiler,
                        'upvote_ratio' : sub.upvote_ratio}
-                print(sub)
-                d = self.producer().send("redditcomments", value=sub)
-                meta = d.get()
-                print(meta.topic)
+                try:
+                    producer.send("reddit", value=sub)
+                    producer.flush()
+                    print('Message published successfully.')
+                except Exception as ex:
+                    print('Exception in publishing message')
+                    print(str(ex))
 
                 
-RedditProducer().stream_submissions(subreddit_name='python', created_date='2023-08-01')
+RedditProducer().stream_submissions(subreddit_name='Nigeria', created_date='2023-08-31')
 
 
 

@@ -1,6 +1,4 @@
 import pandas as pd
-from dotenv import load_dotenv
-import os
 import json
 from kafka import KafkaConsumer
 from ..connections.mongodb_connection import MongoDBConnection
