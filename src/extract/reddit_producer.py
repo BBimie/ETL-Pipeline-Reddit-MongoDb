@@ -4,6 +4,7 @@ from kafka import KafkaProducer
 import json 
 import praw
 from datetime import datetime
+from transform.sentiment_analysis import SentimentAnalysis
 
 load_dotenv()
 
@@ -63,6 +64,7 @@ class RedditProducer:
                        'submission_url' : sub.url,
                        'score' : sub.score,
                        'selftext' : sub.selftext,
+                       'sentiment': SentimentAnalysis(submission=sub.selftext).label_sentiment(),
                        'spoiler' : sub.spoiler,
                        'upvote_ratio' : sub.upvote_ratio}
                 try:
