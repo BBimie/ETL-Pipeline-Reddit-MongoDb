@@ -1,10 +1,10 @@
 import os
 from dotenv import load_dotenv
-from kafka import KafkaProducer
+from kafka.producer import KafkaProducer
 import json 
 import praw
 from datetime import datetime
-from transform.sentiment_analysis import SentimentAnalysis
+
 
 load_dotenv()
 
@@ -21,7 +21,7 @@ class RedditProducer:
 
     def producer(self):
         try:
-            producer = KafkaProducer(bootstrap_servers=['localhost:9092'], api_version=(0, 11))
+            producer = KafkaProducer(bootstrap_servers=['localhost:9092'], api_version=(0, 11), value_serializer=lambda v: json.dumps(v).encode('utf-8'))
             return producer
         except Exception as ex:
             print('Exception while connecting Kafka')
@@ -64,16 +64,14 @@ class RedditProducer:
                        'submission_url' : sub.url,
                        'score' : sub.score,
                        'selftext' : sub.selftext,
-                       'sentiment': SentimentAnalysis(submission=sub.selftext).label_sentiment(),
+                       # 'sentiment': SentimentAnalysis(submission=sub.selftext).label_sentiment(),
                        'spoiler' : sub.spoiler,
                        'upvote_ratio' : sub.upvote_ratio}
-                try:
-                    producer.send("reddit", value=sub)
-                    producer.flush()
-                    print('Message published successfully.')
-                except Exception as ex:
-                    print('Exception in publishing message')
-                    print(str(ex))
+                producer.send("reddit_topic", value=sub)
+                print('Message published successfully.')
+                # except Exception as ex:
+                #     print(f'Exception in publishing message, {ex}  jjjj')
+                #     print(str(ex))
 
                 
 RedditProducer().stream_submissions(subreddit_name='Nigeria', created_date='2023-08-31')
