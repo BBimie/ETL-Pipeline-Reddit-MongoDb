@@ -77,4 +77,4 @@ class RedditProducer:
 if __name__ == "__main__":
     #trigger producer
     producer = RedditProducer()
-    producer.stream_submissions(subreddit_name='Nigeria', created_date='2023-08-31')
+    producer.stream_submissions(subreddit_name='Nigeria', created_date='2023-09-19')

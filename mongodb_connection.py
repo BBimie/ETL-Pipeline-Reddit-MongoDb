@@ -3,6 +3,7 @@ import os
 
 from pymongo import MongoClient
 from pymongo.server_api import ServerApi
+import ssl
 
 load_dotenv()
 
@@ -17,7 +18,7 @@ class MongoDBConnection:
 
     def client(self):
         # Create a new client and connect to the server
-        client = MongoClient(MONGODB_URI, server_api=ServerApi('1'))
+        client = MongoClient(MONGODB_URI, server_api=ServerApi('1'), ssl_cert_reqs=ssl.CERT_NONE)
         return client
 
     def test_connection(self):
@@ -29,9 +30,12 @@ class MongoDBConnection:
         except Exception as e:
             print(e)
 
-    def load_reddit_data(self):
+    def load_reddit_data(self, data):
         client = self.client()
         DB = client.reddit_db
-        DB.submissions.insert_many()
-
-MongoDBConnection().test_connection()
+        try:
+            DB.submissions.insert_many(data)
+            print('Submission loaded into DB')
+            
+        except Exception as e:
+            print('Could not load data into DB, ', e)
