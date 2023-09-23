@@ -2,3 +2,6 @@
 venv
 ReadMe.md
 data1.json
+docker-compose.yml
+__pycache__
+run.sh

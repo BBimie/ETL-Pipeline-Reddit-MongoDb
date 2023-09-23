@@ -4,6 +4,7 @@ from kafka.producer import KafkaProducer
 import json 
 import praw
 from datetime import datetime
+from sentiment_analysis import SentimentAnalysis
 
 
 load_dotenv()
@@ -12,7 +13,6 @@ REDDIT_CLIENT_ID = os.environ["REDDIT_CLIENT_ID"]
 REDDIT_CLIENT_SECRET = os.environ["REDDIT_CLIENT_SECRET"]
 REDDIT_USERNAME = os.environ["REDDIT_USERNAME"]
 REDDIT_PASSWORD = os.environ["REDDIT_PASSWORD"]
-
 
 
 class RedditProducer:
@@ -27,7 +27,6 @@ class RedditProducer:
             print('Exception while connecting Kafka')
             print(str(ex))
             
-
     def _reddit(self):
         reddit = praw.Reddit(
             client_id=REDDIT_CLIENT_ID,
@@ -50,31 +49,32 @@ class RedditProducer:
 
         for sub in subreddit:
             if datetime.utcfromtimestamp(sub.created_utc).strftime('%Y-%m-%d') > created_date:
-                sub: dict[str, str] = {
-                       'title': sub.title,
-                       'subreddit': sub.subreddit,
-                       'author' : sub.author,
+                entry: dict[str, str] = {
+                       'title': str(sub.title),
+                       'subreddit': str(sub.subreddit),
+                       'author' : str(sub.author),
                        'created_date': datetime.utcfromtimestamp(sub.created_utc).strftime('%Y-%m-%d'),
-                       'comments' : [ {'text': comment.body, 'author':comment.author } for comment in sub.comments][:10],
-                       'edited' : sub.edited,
-                       'distinguished' : sub.distinguished,
-                       'submission_id' : sub.id,
-                       'num_comments' : sub.num_comments,
-                       'over_18' : sub.over_18,
-                       'submission_url' : sub.url,
-                       'score' : sub.score,
-                       'selftext' : sub.selftext,
-                       # 'sentiment': SentimentAnalysis(submission=sub.selftext).label_sentiment(),
-                       'spoiler' : sub.spoiler,
-                       'upvote_ratio' : sub.upvote_ratio}
-                producer.send("reddit_topic", value=sub)
-                print('Message published successfully.')
-                # except Exception as ex:
-                #     print(f'Exception in publishing message, {ex}  jjjj')
-                #     print(str(ex))
+                       'comments' : [ {'text': str(comment.body), 'author':str(comment.author) } for comment in sub.comments][:10],
+                       'edited' : str(sub.edited),
+                       'distinguished' : str(sub.distinguished),
+                       'submission_id' : str(sub.id),
+                       'num_comments' : str(sub.num_comments),
+                       'over_18' : str(sub.over_18),
+                       'submission_url' : str(sub.url),
+                       'score' : str(sub.score),
+                       'selftext' : str(sub.selftext),
+                       'sentiment': SentimentAnalysis(submission=sub.selftext).label_sentiment(),
+                       'spoiler' : str(sub.spoiler),
+                       'upvote_ratio' : str(sub.upvote_ratio) 
+                       }
+                try:
+                    producer.send("reddit_topic", value=entry)
+                    print('Message published successfully.')
+                except Exception as ex:
+                    print(f'Exception in publishing message, {ex} ')
+                    print(str(ex))
 
-                
-RedditProducer().stream_submissions(subreddit_name='Nigeria', created_date='2023-08-31')
-
-
-
+if __name__ == "__main__":
+    #trigger producer
+    producer = RedditProducer()
+    producer.stream_submissions(subreddit_name='Nigeria', created_date='2023-08-31')

@@ -41,8 +41,6 @@ class SentimentAnalysis:
                            u"\u3030"
                            "]+", flags=re.UNICODE)
         text = emoji_pattern.sub(r'', text)
-
-        print(text)
         return text
 
     def get_scores(self):
@@ -62,10 +60,5 @@ class SentimentAnalysis:
         else:
             label = 'neutral'
         polarity['label'] = label
-        print(polarity)
 
         return polarity
-
-
-
-SentimentAnalysis(submission='Wow what a terrible news, absolutely bad 😊 😊😊😊😊😊😊😊').label_sentiment()

@@ -1,6 +1,7 @@
 from kafka import KafkaConsumer
 import json
-from ..connections.mongodb_connection import MongoDBConnection
+from mongodb_connection import MongoDBConnection
+import logging
 
 
 class RedditConsumer:
@@ -16,15 +17,14 @@ class RedditConsumer:
     def consume_stream(self):
         DATA = []
         for msg in self.consumer():
-            print(msg)
-            print (msg)
+            print(msg.value)
+            print("====")
             DATA.append(msg)
         return DATA
     
     # def load_data(self):
     #     MongoDBConnection().load_reddit_data()
 
-data = RedditConsumer().consume_stream()
 
-
-
+if __name__ == "__main__":
+    data = RedditConsumer().consume_stream()
