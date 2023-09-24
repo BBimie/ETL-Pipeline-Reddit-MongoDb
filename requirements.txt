@@ -7,9 +7,11 @@ numpy==1.24.4
 pandas==2.0.3
 praw==7.7.1
 prawcore==2.3.0
-pymongo==4.5.0
+pykerberos==1.2.4
+pymongo==3.6.0
 python-dateutil==2.8.2
 python-dotenv==1.0.0
+python-snappy==0.6.1
 pytz==2023.3
 requests==2.31.0
 six==1.16.0
