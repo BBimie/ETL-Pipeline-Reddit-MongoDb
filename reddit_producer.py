@@ -13,6 +13,7 @@ REDDIT_CLIENT_ID = os.environ["REDDIT_CLIENT_ID"]
 REDDIT_CLIENT_SECRET = os.environ["REDDIT_CLIENT_SECRET"]
 REDDIT_USERNAME = os.environ["REDDIT_USERNAME"]
 REDDIT_PASSWORD = os.environ["REDDIT_PASSWORD"]
+SUBREDDIT_NAME=os.environ["SUBREDDIT_NAME"]
 
 
 class RedditProducer:
@@ -36,7 +37,7 @@ class RedditProducer:
         return reddit
     
     
-    def stream_submissions(self, subreddit_name:str, created_date:str) -> None:
+    def stream_submissions(self, created_date:str) -> None:
         """ 
         :param 
             subreddit_name
@@ -45,10 +46,10 @@ class RedditProducer:
         """
         producer = self.producer()
 
-        subreddit = self._reddit().subreddit(subreddit_name).new(limit=None)
+        subreddit = self._reddit().subreddit(SUBREDDIT_NAME).new(limit=None)
 
         for sub in subreddit:
-            if datetime.utcfromtimestamp(sub.created_utc).strftime('%Y-%m-%d') > created_date:
+            if datetime.utcfromtimestamp(sub.created_utc).strftime('%Y-%m-%d') >= created_date:
                 entry: dict[str, str] = {
                        'title': str(sub.title),
                        'subreddit': str(sub.subreddit),
@@ -77,4 +78,4 @@ class RedditProducer:
 if __name__ == "__main__":
     #trigger producer
     producer = RedditProducer()
-    producer.stream_submissions(subreddit_name='Nigeria', created_date='2023-09-19')
+    producer.stream_submissions(created_date='2023-09-19')

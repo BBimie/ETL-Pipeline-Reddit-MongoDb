@@ -15,15 +15,17 @@ class RedditConsumer:
         return consumer
     
     def consume_stream(self):
-        DATA = []
+        print('Consuming data')
         for msg in self.consumer():
             data = json.loads(msg.value.decode("utf-8"))
-            DATA.append(data)
-        self.load_data(data=DATA)
+            print(data)
+            print("====")
+            self.load_data(data=data)
         
     
     def load_data(self, data):
-        MongoDBConnection().load_reddit_data(data=data)
+        print('Loading data into database')
+        MongoDBConnection().load_data(data=data)
 
 
 if __name__ == "__main__":
