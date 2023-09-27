@@ -57,7 +57,7 @@ class MongoDBConnection:
         try:
             collection = DB[self.collection_name]
             collection.insert_one(data)
-            print('Submissions loaded into DB')
+            print('Submission loaded into DB')
         
         except Exception as e:
             print('Could not load data into DB, ', e)
