@@ -1,23 +1,28 @@
-SCOPE:
-
-REDDIT - MONGODB(THROUGH KAFKA - STREAMING) - GRAFANA (SENTIMENT ANALYSIS DASHBOARD) - ORCHESTRATED BY AIRFLOW - DOCKERIZED
-
-- Fetch data daily (filter by date) - streaming included
-- Load the needed data into MongoDB
-- Carry out sentiment analysis (not suure of this part yet)
-- GRAFANA COMES IN HERE ...
-- AIRFLOW GUIDED
-- DOCKER
 
 
 ** To Run **
-- run: `chmod +x kafka_setup.sh`
+-- Create virtualenv: 
 
-- Create virtual environment
+- If you don't already have Kafka setup, you can set it up on Docker by running
+`bash kafka_setup.sh`
+
+- Create virtual environment: I used Python 3.10 for this project
+`virtualenv venv --python=python3.10`
+
+-- activate virtual environment
+    `source venv/usr/local/bin/activate`
 
 - Install dependences `pip install -r requirements.txt`
 
-- Update environmental variables
+- Create and update environmental variables in `.env`
+``` REDDIT_CLIENT_ID 
+    REDDIT_CLIENT_SECRET
+    REDDIT_USERNAME
+    REDDIT_PASSWORD
+    MONGODB_USER
+    MONGODB_PASSWORD
+    SUBREDDIT_NAME
+```
 
 - open two separate terminals to run the producer and consumer separately
     - producer: `python3 reddit_producer.py`
