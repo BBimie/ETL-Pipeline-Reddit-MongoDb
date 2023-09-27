@@ -1,7 +1,6 @@
 from kafka import KafkaConsumer
 import json
 from mongodb_connection import MongoDBConnection
-import logging
 
 
 class RedditConsumer:
