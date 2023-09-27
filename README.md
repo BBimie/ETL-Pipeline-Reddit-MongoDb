@@ -46,6 +46,7 @@ You need to have a Reddit account get Reddit API keys and also set up a MongoDB 
     MONGODB_CLUSTER - MongoDB cluster that will host the data
     DATABASE - Database created on MongoDB to load the data into
     SUBREDDIT_NAME - the name of the subreddit you want to pull data from, which will also become the collection name
+    KAFKA_TOPIC - Kafka topic
 ```
 5. Open two separate terminals to run the kafka producer and consumer separately. Run the producer first
     - producer: 

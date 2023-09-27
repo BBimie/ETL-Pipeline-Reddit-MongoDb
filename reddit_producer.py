@@ -14,11 +14,12 @@ REDDIT_CLIENT_SECRET = os.environ["REDDIT_CLIENT_SECRET"]
 REDDIT_USERNAME = os.environ["REDDIT_USERNAME"]
 REDDIT_PASSWORD = os.environ["REDDIT_PASSWORD"]
 SUBREDDIT_NAME=os.environ["SUBREDDIT_NAME"]
+TOPIC = os.environ["KAFKA_TOPIC"]
 
 
 class RedditProducer:
     def __init__(self) -> None:
-        pass
+        self.topic = TOPIC
 
     def producer(self):
         """
@@ -88,7 +89,7 @@ class RedditProducer:
                        'upvote_ratio' : str(sub.upvote_ratio) 
                        }
                 try:
-                    producer.send("reddit_topic", value=entry)
+                    producer.send(self.topic, value=entry)
                     print('Message published successfully.')
                 except Exception as ex:
                     print(f'Exception in publishing message, {ex} ')

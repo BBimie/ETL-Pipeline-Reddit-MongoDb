@@ -1,14 +1,20 @@
 from kafka import KafkaConsumer
 import json
 from mongodb_connection import MongoDBConnection
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
+TOPIC = os.environ["KAFKA_TOPIC"]
 
 
 class RedditConsumer:
     def __init__(self) -> None:
-        pass
+        self.topic = TOPIC
 
     def consumer(self):
-        consumer = KafkaConsumer('reddit_topic', 
+        consumer = KafkaConsumer(self.topic,
                                  bootstrap_servers=['localhost:9092'],
                                  api_version=(0,11),)
         return consumer
