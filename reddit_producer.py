@@ -5,6 +5,7 @@ import json
 import praw
 from datetime import datetime
 from sentiment_analysis import SentimentAnalysis
+import datetime
 
 
 load_dotenv()
@@ -78,4 +79,15 @@ class RedditProducer:
 if __name__ == "__main__":
     #trigger producer
     producer = RedditProducer()
-    producer.stream_submissions(created_date='2023-09-19')
+    try:
+        input_date = input("Enter the date you want subreddits to start fetching from, YYYY-MM-DD: ")
+        date_format = "%Y-%m-%d"
+        formatted_date = datetime.datetime.strptime(input_date, date_format)
+
+        #run project
+        producer.stream_submissions(created_date=input)
+
+    except ValueError:
+        print("Invalid date format. Please restart and enter the date in YYYY-MM-DD format. ")
+
+    
