@@ -7,12 +7,15 @@ load_dotenv()
 MONGODB_USER = os.environ['MONGODB_USER']
 MONGODB_PASSWORD = os.environ['MONGODB_PASSWORD']
 SUBREDDIT_NAME=os.environ["SUBREDDIT_NAME"]
+MONGODB_CLUSTER = os.environ["MONGODB_CLUSTER"]
+DATABASE = os.environ["DATABASE"]
 
 
 class MongoDBConnection:
     def __init__(self) -> None:
-        self.MONGODB_URI = f"mongodb+srv://{MONGODB_USER}:{MONGODB_PASSWORD}@redditcluster.hnctuvt.mongodb.net/?retryWrites=true&w=majority"
+        self.MONGODB_URI = f"mongodb+srv://{MONGODB_USER}:{MONGODB_PASSWORD}@{MONGODB_CLUSTER}.hnctuvt.mongodb.net/?retryWrites=true&w=majority"
         self.collection_name = SUBREDDIT_NAME
+        self.database = DATABASE
 
     def client(self):
         # Create a new client and connect to the server
@@ -31,7 +34,7 @@ class MongoDBConnection:
 
     def connect_collection(self):
         client = self.client()
-        DB = client.reddit_db
+        DB = client[self.database]
 
         #check if collection already exists?
         existing_collections = DB.list_collection_names()

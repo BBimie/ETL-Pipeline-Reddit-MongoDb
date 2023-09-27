@@ -21,6 +21,15 @@ class RedditProducer:
         pass
 
     def producer(self):
+        """
+        Create and return a Kafka producer instance.
+
+        This function initializes a Kafka producer configured to connect to the Kafka broker at 'localhost:9092'
+        with API version 0.11 or later. It also specifies a value serializer to encode values as JSON objects.
+
+        Returns:
+            producer: A configured Kafka producer instance.
+        """
         try:
             producer = KafkaProducer(bootstrap_servers=['localhost:9092'], api_version=(0, 11), value_serializer=lambda v: json.dumps(v).encode('utf-8'))
             return producer
@@ -29,6 +38,16 @@ class RedditProducer:
             print(str(ex))
             
     def _reddit(self):
+        """
+            Initialize and return a Reddit API client.
+
+            This method initializes a Reddit API client using the provided Reddit client ID, client secret,
+            and user agent. The user agent is typically in the format "app/v1". The initialized Reddit client
+            can be used to interact with Reddit's API.
+
+            Returns:
+                praw.Reddit: An instance of the Reddit API client.
+        """
         reddit = praw.Reddit(
             client_id=REDDIT_CLIENT_ID,
             client_secret=REDDIT_CLIENT_SECRET,
@@ -52,7 +71,7 @@ class RedditProducer:
             if datetime.datetime.utcfromtimestamp(sub.created_utc).strftime('%Y-%m-%d') >= created_date:
                 entry: dict[str, str] = {
                        'title': str(sub.title),
-                       'subreddit': str(sub.subreddit),
+                       'subreddit': SentimentAnalysis(submission=sub.subreddit).clean_submission(),
                        'author' : str(sub.author),
                        'created_date': datetime.datetime.utcfromtimestamp(sub.created_utc).strftime('%Y-%m-%d'),
                        'comments' : [ {'text': str(comment.body), 'author':str(comment.author) } for comment in sub.comments][:10],
