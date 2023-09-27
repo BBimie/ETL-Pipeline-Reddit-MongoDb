@@ -3,7 +3,6 @@ from dotenv import load_dotenv
 from kafka.producer import KafkaProducer
 import json 
 import praw
-from datetime import datetime
 from sentiment_analysis import SentimentAnalysis
 import datetime
 
@@ -50,12 +49,12 @@ class RedditProducer:
         subreddit = self._reddit().subreddit(SUBREDDIT_NAME).new(limit=None)
 
         for sub in subreddit:
-            if datetime.utcfromtimestamp(sub.created_utc).strftime('%Y-%m-%d') >= created_date:
+            if datetime.datetime.utcfromtimestamp(sub.created_utc).strftime('%Y-%m-%d') >= created_date:
                 entry: dict[str, str] = {
                        'title': str(sub.title),
                        'subreddit': str(sub.subreddit),
                        'author' : str(sub.author),
-                       'created_date': datetime.utcfromtimestamp(sub.created_utc).strftime('%Y-%m-%d'),
+                       'created_date': datetime.datetime.utcfromtimestamp(sub.created_utc).strftime('%Y-%m-%d'),
                        'comments' : [ {'text': str(comment.body), 'author':str(comment.author) } for comment in sub.comments][:10],
                        'edited' : str(sub.edited),
                        'distinguished' : str(sub.distinguished),
@@ -85,9 +84,9 @@ if __name__ == "__main__":
         formatted_date = datetime.datetime.strptime(input_date, date_format)
 
         #run project
-        producer.stream_submissions(created_date=input)
+        producer.stream_submissions(created_date=input_date)
 
     except ValueError:
-        print("Invalid date format. Please restart and enter the date in YYYY-MM-DD format. ")
+        print("Invalid date format. Please restart enter the date in YYYY-MM-DD format. ")
 
     
