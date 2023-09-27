@@ -4,11 +4,11 @@ This project aims to create an ETL (Extract, Transform, Load) pipeline for extra
 
 This repository provides the necessary tools and scripts to perform the following key tasks:
 
-Data Extraction: The ETL pipeline extracts data from specific subreddits on Reddit, allowing you to focus on topics of interest or relevance to your project.
+**Data Extraction**: The ETL pipeline extracts data from specific subreddits on Reddit, allowing you to focus on topics of interest or relevance to your project.
 
-Data Transformation: The extracted data is processed and transformed to ensure consistency and relevance. This includes some cleaning, filtering, text processing and sentiment analysis.
+**Data Transformation**: The extracted data is processed and transformed to ensure consistency and relevance. This includes some cleaning, filtering, text processing and sentiment analysis.
 
-Data Loading: The transformed data is then loaded into a MongoDB database for storage and future analysis. MongoDB is a NoSQL database that offers flexibility and scalability for handling diverse data types.
+**Data Loading**: The transformed data is then loaded into a MongoDB database for storage and future analysis. MongoDB is a NoSQL database that offers flexibility and scalability for handling diverse data types.
 
 By setting up this ETL pipeline, I have automated the process of collecting and managing Reddit data, making it easier to access and analyze some of the information needed. 
 
