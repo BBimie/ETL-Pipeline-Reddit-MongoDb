@@ -1,5 +1,4 @@
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
-
 import re
 
 class SentimentAnalysis:
@@ -7,8 +6,16 @@ class SentimentAnalysis:
         self.sia = SentimentIntensityAnalyzer()
         self.submission = submission
 
-    def clean_submission(self):
-        """ Clean submission text, remove special characters and emojis """
+    def clean_submission(self) -> str:
+        """ 
+        Clean submission text, remove special characters and emojis.
+
+        This function takes the 'submission' attribute of an object and performs text cleaning by
+        removing URLs, special characters, and emojis.
+
+        Returns:
+            str: Cleaned text without URLs, special characters, and emojis.
+        """
         text = re.sub("http[s]?\://\S+","",self.submission)
         text = re.sub('[)(#$]', ' ', text)
         emoji_pattern = re.compile("["
@@ -43,13 +50,30 @@ class SentimentAnalysis:
         text = emoji_pattern.sub(r'', text)
         return text
 
-    def get_scores(self):
-        """ Get all polarity scores from the Sentiment analyzer """
+    def get_scores(self) -> dict:
+        """
+        This method utilizes a Sentiment Analyzer (the 'sia' object) to analyze the sentiment
+        of the cleaned submission text (using the 'clean_submission()' method) and retrieves polarity scores
+        for positive, neutral, and negative sentiment.
+
+        Returns:
+            polarity: A dictionary containing polarity scores, including 'neg' (negative), 'neu' (neutral),
+                'pos' (positive), and 'compound' (compound sentiment).
+        """
         polarity = self.sia.polarity_scores(self.clean_submission())
         return polarity
     
-    def label_sentiment(self):
-        """Label submission sentiment using the compound score
+    def label_sentiment(self) -> dict:
+        """
+        Label sentiment based on polarity scores.
+
+        This function calculates a sentiment label based on polarity scores obtained using the 'get_scores()' method.
+        It assigns a sentiment label of 'positive' if the 'compound' polarity score is greater than 0.05, 'negative'
+        if it's less than -0.05, and 'neutral' otherwise. The sentiment label is added to the polarity dictionary.
+
+        Returns:
+        polrity: A dictionary containing polarity scores ('neg', 'neu', 'pos', 'compound') and a 'label' indicating
+                the sentiment label ('positive', 'negative', or 'neutral').
         """
         polarity = self.get_scores()
 
