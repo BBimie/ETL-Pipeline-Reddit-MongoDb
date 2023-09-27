@@ -12,12 +12,12 @@ done
 #Connect to Kafka shell
 docker exec -it kafka /bin/sh
 
-# Create Kafka topics
+# Create Kafka topic
+echo "Creating Kafka topic > reddit_topic"
 kafka-topics.sh --create --zookeeper zookeeper:2181 --replication-factor 1 --partitions 1 --topic reddit_topic
 
-# Add other ETL pipeline setup steps here
 
-echo "ETL pipeline setup complete."
+echo "Kafka setup complete."
 
 
 
