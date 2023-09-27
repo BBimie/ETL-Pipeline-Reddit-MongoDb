@@ -71,7 +71,7 @@ class RedditProducer:
             if datetime.datetime.utcfromtimestamp(sub.created_utc).strftime('%Y-%m-%d') >= created_date:
                 entry: dict[str, str] = {
                        'title': str(sub.title),
-                       'subreddit': SentimentAnalysis(submission=sub.subreddit).clean_submission(),
+                       'subreddit': str(sub.subreddit),
                        'author' : str(sub.author),
                        'created_date': datetime.datetime.utcfromtimestamp(sub.created_utc).strftime('%Y-%m-%d'),
                        'comments' : [ {'text': str(comment.body), 'author':str(comment.author) } for comment in sub.comments][:10],
@@ -82,7 +82,7 @@ class RedditProducer:
                        'over_18' : str(sub.over_18),
                        'submission_url' : str(sub.url),
                        'score' : str(sub.score),
-                       'selftext' : str(sub.selftext),
+                       'selftext' : SentimentAnalysis(submission=sub.selftext).clean_submission(),
                        'sentiment': SentimentAnalysis(submission=sub.selftext).label_sentiment(),
                        'spoiler' : str(sub.spoiler),
                        'upvote_ratio' : str(sub.upvote_ratio) 
