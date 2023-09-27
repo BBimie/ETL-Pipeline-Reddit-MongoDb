@@ -10,12 +10,14 @@ Data Transformation: The extracted data is processed and transformed to ensure c
 
 Data Loading: The transformed data is then loaded into a MongoDB database for storage and future analysis. MongoDB is a NoSQL database that offers flexibility and scalability for handling diverse types of data.
 
-By setting up this ETL pipeline, I have automated the process of collecting and managing Reddit data, making it easier to access and analyze the information needed. 
+By setting up this ETL pipeline, I have automated the process of collecting and managing Reddit data, making it easier to access and analyze some of the information needed. 
+
 Whether you're conducting research, monitoring trends, or building applications that require Reddit data, this project provides a solid foundation for your data processing needs.
 
 
 
 ## RUN PROJECT
+
 You need to have a Reddit account and get Reddit API keys and also setup a MongoDB cluster on MongoDB Atlas. Then you can get to work.
 
 1. Create virtualenv: I used Python 3.10 for this project.
@@ -48,3 +50,11 @@ You need to have a Reddit account and get Reddit API keys and also setup a Mongo
     `python3 consumer.py`
 
 6. Enter your desired date and wait for the data to be pulled and loaded into the database.
+
+
+## TOOLS AND TECHNOLOGIES
+
+- Praw
+- Kafka
+- MongoDB
+- Docker
