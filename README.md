@@ -21,15 +21,18 @@ Whether conducting research, monitoring trends, or building applications that re
 You need to have a Reddit account get Reddit API keys and also set up a MongoDB cluster on MongoDB Atlas. Then you can get to work.
 
 1. Create virtualenv: I used Python 3.10 for this project.
+
     `virtualenv venv --python=python3.10`
 
 
     `source venv/usr/local/bin/activate`
 
 2. (Optional if you already have kafka setup) Setup Kafka on Docker
+
     `bash kafka_setup.sh`
 
 3. Install packages 
+
     `pip install -r requirements.txt`
 
 4. Create and update environmental variables in `.env`
