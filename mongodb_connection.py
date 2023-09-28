@@ -54,7 +54,8 @@ class MongoDBConnection:
         
     def load_data(self, data):
         client = self.client()
-        DB = client.reddit_db
+        DB = client[self.database]
+
         self.connect_collection()
 
         try:
@@ -65,6 +66,3 @@ class MongoDBConnection:
         except Exception as e:
             print('Could not load data into DB, ', e)
 
-
-
-MongoDBConnection().connect_collection()
