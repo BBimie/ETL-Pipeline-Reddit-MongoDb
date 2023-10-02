@@ -61,5 +61,6 @@ You need to have a Reddit account get Reddit API keys and also set up a MongoDB 
 
 - Praw
 - Kafka
+- Pymongo
 - MongoDB
 - Docker
